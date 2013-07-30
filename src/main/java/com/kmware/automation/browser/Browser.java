@@ -150,9 +150,8 @@ public class Browser {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
                 log.info("Closing driver");
-//                Object errors = ((JavascriptExecutor) drvr).executeScript("return window.jsErrors");
                 try {
-//                    drvr.quit();
+                    drvr.quit();
                 } catch (Throwable t) {
                     log.error("Error during closing driver. Details below:", t);
                 }

@@ -8,7 +8,10 @@ import java.util.concurrent.TimeoutException;
 import com.kmware.automation.reflection.utils.ReflectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.WebElement;
-
+/**
+ * This class is a java wrapper around jquery calls. See doc on jquery v1.7.1 for info on methods.
+ * A couple of methods were added for convinience
+ */
 public class jQuery implements Iterable<WebElement> {
     public static abstract class Eacher {
         public abstract void invoke(Integer index, WebElement ele);

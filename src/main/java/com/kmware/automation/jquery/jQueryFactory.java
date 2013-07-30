@@ -48,17 +48,6 @@ public class jQueryFactory {
     }
 
     public void checkReady() {
-//        boolean loaded = ((Boolean) js.executeScript("return document.readyState == 'complete'")).booleanValue();
-//        System.out.println(loaded);
-//        while (!loaded) {
-//            try {
-//                Thread.sleep(200);
-//                loaded = ((Boolean) js.executeScript("return document.readyState == 'complete'")).booleanValue();
-//                System.out.println(loaded);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
     }
 
 
@@ -124,13 +113,31 @@ public class jQueryFactory {
         }
     }
 
+    /**
+     * Query using css selector and return a jquery instance that represents found elements
+     * @param query css selector
+     * @return jQuery object
+     */
     public jQuery query(String query) {
-        this.checkReady();
         return new jQuery(this, createId(), query);
     }
 
+    /**
+     * Similar to query(selector) method but with small sugar.
+     * First you can specify the return element type either than jQuery.
+     * Also this gives the ability to use the selector formatting. use %s in your selector to apply
+     * additional selector of an element class you are passing in.
+     * for eg. selector 'form %s:visible' will transform to 'form button:visible' for a simple Button
+     * element or 'form .ui-button:visible' for.
+     * primefaces Button if passed as a second argument.
+     * But if you provide a direct selector to an element you select like '#buttonId' then it's still ok.
+     * The method will simply return the element if found and cast it to required Class
+     * @param query css selector optionally w/ formatting
+     * @param klazz the return object class
+     * @param <E>
+     * @return the object you are looking for
+     */
     public <E> E query(String query, Class<E> klazz) {
-        this.checkReady();
         String selector = query;
         if(query.contains("%s")) selector = String.format(query, ReflectUtils.getExtraSelector(klazz));
         return ReflectUtils.getAs(this, createId(), selector, klazz);
@@ -142,12 +149,19 @@ public class jQueryFactory {
         return new jQuery(this, createId(), we);
     }
 
+    /**
+     * Use this mehtod preferably cause it injects jquery to the page if it's not yet injected
+     * @see JavascriptExecutor#executeScript(String, Object...)
+     * @param script
+     * @param args
+     * @return
+     */
     public Object js(String script, Object... args) {
         if (js == null) {
             throw new IllegalStateException("Cannot run js without setting the js executor!");
         }
         try {
-//            log.info("Executing script: {} . Arguments: {}",script,args);
+            log.debug("Executing script: {} . Arguments: {}",script,args);
             return js.executeScript(script, args);
         } catch (Exception e) {
             try {

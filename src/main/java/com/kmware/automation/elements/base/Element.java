@@ -37,8 +37,6 @@ public class Element<T extends Element> extends jQuery {
 
     public T nclick(){
         jsref(".clickEventDispatch();");
-//        wait4ajax();
-//        ajaxWait();
         return (T) this;
     }
 

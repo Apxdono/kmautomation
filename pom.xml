@@ -104,12 +104,7 @@
             <version>2.1_3</version>
         </dependency>
         <!--DEPENDENCIES FOR SELENIUMJAVA-->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.10</version>
-            <scope>test</scope>
-        </dependency>
+
     </dependencies>
 
 
@@ -119,7 +114,6 @@
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
-
             <build>
                 <resources>
                     <resource>
@@ -137,6 +131,9 @@
                         <configuration>
                             <source>1.6</source>
                             <target>1.6</target>
+                            <excludes>
+                                <exclude>**/Main.java</exclude>
+                            </excludes>
                         </configuration>
                     </plugin>
                     <plugin>
@@ -166,6 +163,29 @@
                                 </goals>
                             </execution>
                         </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>developement</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>2.3.2</version>
+                        <configuration>
+                            <source>1.6</source>
+                            <target>1.6</target>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>2.12</version>
                     </plugin>
                 </plugins>
             </build>

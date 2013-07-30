@@ -8,5 +8,5 @@ package com.kmware.automation.actions;
 public interface IAction {
     public String getId();
     public void init();
-    public void run();
+    public void run(Object... args);
 }

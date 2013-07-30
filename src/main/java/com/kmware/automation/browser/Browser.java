@@ -1,10 +1,14 @@
 package com.kmware.automation.browser;
 
+import com.kmware.automation.actions.ActionIndexer;
+import com.kmware.automation.actions.IAction;
 import com.kmware.automation.elements.base.Element;
 import com.kmware.automation.enums.Browsers;
 import com.kmware.automation.enums.Options;
 import com.kmware.automation.io.utils.PropertiesHelper;
 import com.kmware.automation.jquery.jQueryFactory;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.TakesScreenshot;
@@ -34,6 +38,7 @@ public class Browser {
     protected JavascriptExecutor jExec;
     protected TakesScreenshot screener;
     protected jQueryFactory jquery;
+    protected ActionIndexer actionIndexer;
 
     protected Browsers current;
 
@@ -171,6 +176,34 @@ public class Browser {
         return true;
     }
 
+
+    public Browser executeActions(String... ids) {
+        if (ids != null && ids.length > 0)
+            for (String id : ids) {
+                IAction action = actionIndexer.getAction(id);
+                if (action == null) {
+                    log.error("Cannot execute action. No action found with id: {}", id);
+                    continue;
+                }
+                action.run(extraArgs(null));
+            }
+        return this;
+    }
+
+    public Browser executeAction(String id, Object... args){
+        IAction action = actionIndexer.getAction(id);
+        if(action !=null){
+            action.run(extraArgs(args));
+        }
+        return this;
+    }
+
+    protected Object[] extraArgs(Object... args){
+        Object[] extra = new Object[]{this};
+        return ArrayUtils.addAll(extra,args);
+    }
+
+
     /**
      * shorthand method
      */
@@ -218,8 +251,15 @@ public class Browser {
                 }
             }
         });
-
-
+        actionIndexer = new ActionIndexer();
+        String actionsPackages = options.property(Options.PACKAGES,Options.PACKAGES.defaults);
+        String startupActions = options.property(Options.STARTUP_ACTIONS);
+        if(StringUtils.isNotBlank(actionsPackages)){
+            actionIndexer.scanActions(actionsPackages.split(";"));
+            if(StringUtils.isNotBlank(startupActions)){
+                executeActions(startupActions.split(";"));
+            }
+        }
     }
 
     protected DesiredCapabilities getDesiredCapabilities() {

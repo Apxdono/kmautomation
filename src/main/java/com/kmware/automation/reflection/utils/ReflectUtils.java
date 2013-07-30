@@ -3,9 +3,10 @@ package com.kmware.automation.reflection.utils;
 import com.kmware.automation.elements.base.JQElement;
 import com.kmware.automation.jquery.jQuery;
 import com.kmware.automation.jquery.jQueryFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,6 +14,7 @@ import java.lang.reflect.InvocationTargetException;
  * Date: 26.07.13 13:31
  */
 public class ReflectUtils {
+    static final Logger log = LoggerFactory.getLogger(ReflectUtils.class);
 
     public static String getExtraSelector(Class<?> klazz){
         JQElement annot = klazz.getAnnotation(JQElement.class);
@@ -27,14 +29,8 @@ public class ReflectUtils {
             Constructor constr = klazz.getDeclaredConstructor(argsTypes);
             Object o = constr.newInstance(jq);
             result = (E) o;
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            log.error("Problem when initializing new object from jquery object.",e);
         }
         return result;
     }
@@ -46,18 +42,9 @@ public class ReflectUtils {
             Constructor constr = klazz.getDeclaredConstructor(argsTypes);
             Object o = constr.newInstance(fact,ref,selector);
             result = (E) o;
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            log.error("Problem when initialising new object from parameters.",e);
         }
         return result;
     }
-
-
-
 }

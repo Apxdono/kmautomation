@@ -10,7 +10,8 @@ public enum Options {
     DRIVER_IMPLEMENTATION("driver.implementation",Browsers.CHROME.value),
     PLATFORM("desired.platform","WIN"),
     SCREENSHOT_DIR("screenshot.dir","screenshots"),
-    PACKAGES("packages","");
+    PACKAGES("actions.packages",""),
+    STARTUP_ACTIONS("startup.actions","");
 
     public final String value;
     public final String defaults;

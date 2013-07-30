@@ -1,4 +1,4 @@
-package com.kmware.automation.elements.base.interfaces;
+package com.kmware.automation.elements.interfaces;
 
 import com.kmware.automation.elements.base.Element;
 

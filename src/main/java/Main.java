@@ -1,4 +1,4 @@
-import com.kmware.automation.elements.primefaces.PFOneMenu;
+import com.kmware.automation.elements.selects.PFOneMenu;
 
 import static com.kmware.automation.browser.Browser.browser;
 

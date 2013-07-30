@@ -1,6 +1,8 @@
-package com.kmware.automation.elements.base;
+package com.kmware.automation.elements.selects;
 
-import com.kmware.automation.elements.base.interfaces.ISelect;
+import com.kmware.automation.elements.base.Element;
+import com.kmware.automation.elements.base.JQElement;
+import com.kmware.automation.elements.interfaces.ISelect;
 import com.kmware.automation.jquery.jQuery;
 import com.kmware.automation.jquery.jQueryFactory;
 import org.openqa.selenium.WebElement;
@@ -13,51 +15,51 @@ import org.openqa.selenium.WebElement;
 @JQElement(
         extraSelector = "select"
 )
-public class Select extends Element implements ISelect<Select> {
-    public Select(jQuery j) {
+public class HTMLSelect extends Element implements ISelect<HTMLSelect> {
+    public HTMLSelect(jQuery j) {
         super(j);
     }
 
-    public Select(jQueryFactory jqf, long id, String query) {
+    public HTMLSelect(jQueryFactory jqf, long id, String query) {
         super(jqf, id, query);
     }
 
-    public Select(jQueryFactory jqf, long id, WebElement we) {
+    public HTMLSelect(jQueryFactory jqf, long id, WebElement we) {
         super(jqf, id, we);
     }
 
-    public Select(jQueryFactory jqf, String reference, jQuery parent) {
+    public HTMLSelect(jQueryFactory jqf, String reference, jQuery parent) {
         super(jqf, reference, parent);
     }
 
-    public Select(jQueryFactory jqf, String reference, String query) {
+    public HTMLSelect(jQueryFactory jqf, String reference, String query) {
         super(jqf, reference, query);
     }
 
-    public Select(jQueryFactory jqf, String reference, String query, jQuery parent) {
+    public HTMLSelect(jQueryFactory jqf, String reference, String query, jQuery parent) {
         super(jqf, reference, query, parent);
     }
 
     @Override
-    public Select expand() {
+    public HTMLSelect expand() {
         this.nclick();
         return this;
     }
 
     @Override
-    public Select selectAt(int index) {
+    public HTMLSelect selectAt(int index) {
         this.find("option:eq("+index+")").get().click();
         return this;
     }
 
     @Override
-    public Select selectValue(String value) {
+    public HTMLSelect selectValue(String value) {
         this.find("option:contains("+value+")").get().click();
         return null;
     }
 
     @Override
-    public Select selectBy(String criteria) {
+    public HTMLSelect selectBy(String criteria) {
         this.find("option"+criteria+"").get().click();
         return this;  //To change body of implemented methods use File | Settings | File Templates.
     }

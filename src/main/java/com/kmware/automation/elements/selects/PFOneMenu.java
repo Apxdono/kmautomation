@@ -1,8 +1,8 @@
-package com.kmware.automation.elements.primefaces;
+package com.kmware.automation.elements.selects;
 
 import com.kmware.automation.elements.base.Element;
 import com.kmware.automation.elements.base.JQElement;
-import com.kmware.automation.elements.base.interfaces.ISelect;
+import com.kmware.automation.elements.interfaces.ISelect;
 import com.kmware.automation.jquery.jQuery;
 import com.kmware.automation.jquery.jQueryFactory;
 import org.openqa.selenium.WebElement;

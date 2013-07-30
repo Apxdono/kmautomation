@@ -1,4 +1,4 @@
-package com.kmware.automation.elements.primefaces;
+package com.kmware.automation.elements.buttons;
 
 import com.kmware.automation.elements.base.Element;
 import com.kmware.automation.elements.base.JQElement;

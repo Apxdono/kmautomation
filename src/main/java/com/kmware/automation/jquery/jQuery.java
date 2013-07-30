@@ -103,16 +103,16 @@ public class jQuery implements Iterable<WebElement> {
      * Handles an explicit wait if an element prefoms an ajax request.
      */
     protected void wait4ajax() {
-        while (true) {
-            boolean ajaxIsComplete = ((Boolean) jqf.js("return jQuery.active == 0")).booleanValue();
-            if (ajaxIsComplete)
-                break;
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+//        while (true) {
+//            boolean ajaxIsComplete = ((Boolean) jqf.js("return jQuery.active == 0")).booleanValue();
+//            if (ajaxIsComplete)
+//                break;
+//            try {
+//                Thread.sleep(100);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
 
@@ -466,7 +466,7 @@ public class jQuery implements Iterable<WebElement> {
     }
 
     public String cssPath() {
-        return (String) jsret(".cssPath();");
+        return (String) jsret(".getPath();");
     }
 
     public jQuery first() {
@@ -493,8 +493,9 @@ public class jQuery implements Iterable<WebElement> {
     }
 
     public WebElement get(int index) {
+        //TODO change to [] instead of get and see what happens
         Object o = jsret(".get(" + index + ")");
-        return (WebElement) jsret(".get(" + index + ")");
+        return (WebElement) o;
     }
 
     public jQuery jget() {
@@ -589,8 +590,7 @@ public class jQuery implements Iterable<WebElement> {
         closed = false;
         jsref("= " + jqf.getRef() + "(arguments[0]);", we);
         String cssPath = this.cssPath();
-        this.selector = cssPath();
-        System.out.println(this.selector);
+        this.selector = cssPath;
         return init();
     }
 

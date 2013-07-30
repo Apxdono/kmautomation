@@ -18,7 +18,7 @@ import org.openqa.selenium.WebElement;
 public class PFOneMenu extends Element<PFOneMenu> implements ISelect<PFOneMenu>{
     public static final String SELECTOR = ".ui-selectonemenu";
     public static final String BUTTON_SELECTOR = ".ui-selectonemenu-trigger";
-    public static final String ITEMS_SELECTOR = "[id$=\\\"%s_panel\\\"].ui-selectonemenu-panel ul li";
+    public static final String ITEMS_SELECTOR = "div[id$=\"%s_panel\"].ui-selectonemenu-panel .ui-selectonemenu-item";
     public PFOneMenu(jQuery j) {
         super(j);
     }
@@ -45,14 +45,14 @@ public class PFOneMenu extends Element<PFOneMenu> implements ISelect<PFOneMenu>{
 
     @Override
     public PFOneMenu expand() {
-        this.find(BUTTON_SELECTOR).click();
-        wait4ajax();
+        this.find(BUTTON_SELECTOR).jget().as(Element.class).nclick();
         return this;
     }
 
     @Override
     public PFOneMenu selectAt(int index) {
-        items().jget(index).click();
+        String id = this.attr("id");
+        this.jqf.query(String.format(ITEMS_SELECTOR,id)).jget(index).as(Element.class).nclick();
         return this;
     }
 

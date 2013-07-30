@@ -15,9 +15,8 @@ public class Main {
         final Logger log = LoggerFactory.getLogger(Main.class);
         browser().driver().get("http://primefaces.org");
         browser().navigate(".button-block > a",0);
-        browser().navigate("a",36);
+        browser().navigate("a:contains('OneMenu')");
         browser().jq().query(".post").find("form %s", PFOneMenu.class).getEl().expand().selectAt(2);
-        browser().navigate("a:contains('Button')",3);
-
+        browser().navigate("a:contains(\"Button\")",3);
     }
 }

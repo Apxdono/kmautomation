@@ -5,6 +5,8 @@ import com.kmware.automation.reflection.utils.ReflectUtils;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,6 +22,7 @@ public class jQueryFactory {
     private long defaultTimeout = 30000L;
     private final AtomicLong id_factory = new AtomicLong();
     private Browsers impl;
+    private Logger log = LoggerFactory.getLogger(jQueryFactory.class);
 
     public long getDefaultTimeout() {
         return defaultTimeout;
@@ -144,6 +147,7 @@ public class jQueryFactory {
             throw new IllegalStateException("Cannot run js without setting the js executor!");
         }
         try {
+//            log.info("Executing script: {} . Arguments: {}",script,args);
             return js.executeScript(script, args);
         } catch (Exception e) {
             try {

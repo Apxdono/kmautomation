@@ -36,9 +36,9 @@ public class Element<T extends Element> extends jQuery {
     }
 
     public T nclick(){
-        this.get().click();
-        wait4ajax();
-        ajaxWait();
+        jsref(".clickEventDispatch();");
+//        wait4ajax();
+//        ajaxWait();
         return (T) this;
     }
 
@@ -57,7 +57,8 @@ public class Element<T extends Element> extends jQuery {
     }
 
     public T getEl(int index){
-        return (T) ReflectUtils.getAs(this.jget(index), getClass());
+        T el = (T) ReflectUtils.getAs(this.jget(index), getClass());
+        return el;
     }
 
 }

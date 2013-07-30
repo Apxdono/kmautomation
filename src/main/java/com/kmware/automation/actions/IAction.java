@@ -1,5 +1,7 @@
 package com.kmware.automation.actions;
 
+import com.kmware.automation.browser.Browser;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Oleg
@@ -8,5 +10,5 @@ package com.kmware.automation.actions;
 public interface IAction {
     public String getId();
     public void init();
-    public void run(Object... args);
+    public void run(Browser browser,Object... args);
 }

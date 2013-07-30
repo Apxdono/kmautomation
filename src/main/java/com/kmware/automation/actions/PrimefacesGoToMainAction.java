@@ -25,9 +25,8 @@ public class PrimefacesGoToMainAction implements IAction {
     }
 
     @Override
-    public void run(Object... args) {
-        Browser b = (Browser) args[0];
-        b.driver().get("http://primefaces.org");
-        b.navigate(".button-block > a",0);
+    public void run(Browser browser,Object... args) {
+        browser.driver().get("http://primefaces.org");
+        browser.navigate(".button-block > a",0);
     }
 }

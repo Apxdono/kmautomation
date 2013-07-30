@@ -7,20 +7,22 @@ import com.kmware.automation.enums.Browsers;
 import com.kmware.automation.enums.Options;
 import com.kmware.automation.io.utils.PropertiesHelper;
 import com.kmware.automation.jquery.jQueryFactory;
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Platform;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.IOException;
+import java.lang.management.ManagementFactory;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.<br/>
@@ -39,8 +41,8 @@ public class Browser {
     protected TakesScreenshot screener;
     protected jQueryFactory jquery;
     protected ActionIndexer actionIndexer;
-
-    protected Browsers current;
+    protected File screenshotDir;
+    protected Browsers currentImplementation;
 
     protected Logger log = LoggerFactory.getLogger(Browser.class);
 
@@ -64,7 +66,7 @@ public class Browser {
     public Browser() {
         options = new PropertiesHelper();
         driver = null;
-        current = null;
+        currentImplementation = null;
         init();
     }
 
@@ -76,15 +78,15 @@ public class Browser {
     public Browser(String propertyFile) {
         options = new PropertiesHelper();
         driver = null;
-        current = null;
+        currentImplementation = null;
         init(propertyFile);
     }
 
     /**
      * @return current browser implementation
      */
-    public Browsers current() {
-        return current;
+    public Browsers getCurrentImplementation() {
+        return currentImplementation;
     }
 
     /**
@@ -147,8 +149,9 @@ public class Browser {
     /**
      * CM Punk's finisher move ;) <br></br>
      * Just kidding. This is just a wrapper for Thread.sleep
-     * @see Thread#sleep method
+     *
      * @param ms time in milliseconds
+     * @see Thread#sleep method
      */
     public void goToSleep(long ms) {
         try {
@@ -160,6 +163,7 @@ public class Browser {
 
     /**
      * Check of document DOM is loaded
+     *
      * @return true if loaded. false otherwise.
      */
     public boolean documentReady() {
@@ -185,22 +189,37 @@ public class Browser {
                     log.error("Cannot execute action. No action found with id: {}", id);
                     continue;
                 }
-                action.run(extraArgs(null));
+                action.run(this, null);
             }
         return this;
     }
 
-    public Browser executeAction(String id, Object... args){
+    public Browser executeAction(String id, Object... args) {
         IAction action = actionIndexer.getAction(id);
-        if(action !=null){
-            action.run(extraArgs(args));
+        if (action != null) {
+            action.run(this, args);
         }
         return this;
     }
 
-    protected Object[] extraArgs(Object... args){
-        Object[] extra = new Object[]{this};
-        return ArrayUtils.addAll(extra,args);
+    public void makeScreenshot() {
+        makeScreenshot("");
+    }
+
+    public void makeScreenshot(String file) {
+        String fileName = file;
+        if (StringUtils.isBlank(file)) {
+            SimpleDateFormat sdf = new SimpleDateFormat("HH-mm-ss");
+            fileName = "screenshot" + sdf.format(new Date()) + ".png";
+        }
+        if (!fileName.endsWith(".png")) fileName += ".png";
+        File screenshot = ((TakesScreenshot) new Augmenter().augment(driver)).getScreenshotAs(OutputType.FILE);
+        try {
+            FileUtils.copyFile(screenshot, new File(this.screenshotDir, fileName));
+        } catch (IOException e) {
+            log.error("Cannot take the screenshot.", e);
+        }
+
     }
 
 
@@ -215,13 +234,14 @@ public class Browser {
      * The magic begins as soon as you provide a valid propertyfile in classpath.
      * PLEASE NOTE. You don't need to call the WebDriver quit or close method. It will be called
      * automatically as soon as the app finishes working.
+     *
      * @param propertyFile
      */
     protected void init(String propertyFile) {
         log.info("Creating new Browser instance.");
         options.load(propertyFile, true);
-        current = Browsers.getBy(options.property(Options.DRIVER_IMPLEMENTATION, Options.DRIVER_IMPLEMENTATION.defaults));
-        log.info("Selected driver implementation: {}", current.value);
+        currentImplementation = Browsers.getBy(options.property(Options.DRIVER_IMPLEMENTATION, Options.DRIVER_IMPLEMENTATION.defaults));
+        log.info("Selected driver implementation: {}", currentImplementation.value);
         String url = options.property(Options.DRIVER_HUB, Options.DRIVER_HUB.defaults);
         URL hub = null;
         try {
@@ -239,7 +259,35 @@ public class Browser {
         screener = (TakesScreenshot) new Augmenter().augment(driver);
         jquery = new jQueryFactory();
         jquery.setJs(jExec);
-        jquery.setBrowserImplementation(current);
+        jquery.setBrowserImplementation(currentImplementation);
+        postInit();
+    }
+
+    protected void postInit() {
+        actionIndexer = new ActionIndexer();
+        String actionsPackages = options.property(Options.PACKAGES, Options.PACKAGES.defaults);
+        if (StringUtils.isNotBlank(actionsPackages)) {
+            actionIndexer.scanActions(actionsPackages.split(";"));
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss");
+        Date startupTime = new Date(ManagementFactory.getRuntimeMXBean().getStartTime());
+        String currentSessionScreenFolder = sdf.format(startupTime);
+        String screenFolder = options.property(Options.SCREENSHOT_DIR, Options.SCREENSHOT_DIR.defaults);
+        try {
+            this.screenshotDir = new File(new File(screenFolder), currentSessionScreenFolder);
+            FileUtils.forceMkdir(this.screenshotDir);
+        } catch (IOException e) {
+            log.error("Cannot create directory for screenshots.", e);
+            this.screenshotDir = null;
+        }
+        boolean maximize = Boolean.parseBoolean(options.property(Options.START_MAXIMIZED, Options.START_MAXIMIZED.defaults));
+        if (maximize && !currentImplementation.equals(Browsers.OPERA)) {
+            driver.manage().window().maximize();
+        }
+        String startupActions = options.property(Options.STARTUP_ACTIONS);
+        if (StringUtils.isNotBlank(startupActions)) {
+            executeActions(startupActions.split(";"));
+        }
         final WebDriver drvr = driver;
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
@@ -251,20 +299,11 @@ public class Browser {
                 }
             }
         });
-        actionIndexer = new ActionIndexer();
-        String actionsPackages = options.property(Options.PACKAGES,Options.PACKAGES.defaults);
-        String startupActions = options.property(Options.STARTUP_ACTIONS);
-        if(StringUtils.isNotBlank(actionsPackages)){
-            actionIndexer.scanActions(actionsPackages.split(";"));
-            if(StringUtils.isNotBlank(startupActions)){
-                executeActions(startupActions.split(";"));
-            }
-        }
     }
 
     protected DesiredCapabilities getDesiredCapabilities() {
         DesiredCapabilities result = null;
-        switch (current) {
+        switch (currentImplementation) {
             case FIREFOX:
                 result = DesiredCapabilities.firefox();
                 break;

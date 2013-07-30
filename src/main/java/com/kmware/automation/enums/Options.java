@@ -11,7 +11,8 @@ public enum Options {
     PLATFORM("desired.platform","WIN"),
     SCREENSHOT_DIR("screenshot.dir","screenshots"),
     PACKAGES("actions.packages",""),
-    STARTUP_ACTIONS("startup.actions","");
+    STARTUP_ACTIONS("startup.actions",""),
+    START_MAXIMIZED("maximized.window","false");
 
     public final String value;
     public final String defaults;

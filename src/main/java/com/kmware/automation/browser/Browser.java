@@ -138,9 +138,11 @@ public class Browser {
         Element e = this.jq().query(selector, Element.class).getEl(index);
         String url = driver().getCurrentUrl();
         e.as(Element.class).nclick();
-        while (url.equals(driver().getCurrentUrl())) {
+        int hops = 0;
+        while (url.equals(driver().getCurrentUrl()) && hops < 6) {
             log.debug("Waiting for page to load");
             goToSleep(1000);
+            hops++;
         }
         documentReady();
         return e;

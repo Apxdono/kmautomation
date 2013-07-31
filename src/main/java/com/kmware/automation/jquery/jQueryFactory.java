@@ -161,7 +161,7 @@ public class jQueryFactory {
             throw new IllegalStateException("Cannot run js without setting the js executor!");
         }
         try {
-            log.debug("Executing script: {} . Arguments: {}",script,args);
+            log.info("Executing script: {} . Arguments: {}",script,args);
             return js.executeScript(script, args);
         } catch (Exception e) {
             try {
@@ -177,6 +177,10 @@ public class jQueryFactory {
 
     public String getUrl() {
         return url;
+    }
+
+    public JavascriptExecutor getJs(){
+        return this.js;
     }
 
     public jQueryFactory setUrl(String url) {

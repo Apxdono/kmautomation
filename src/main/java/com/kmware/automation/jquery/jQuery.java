@@ -39,9 +39,9 @@ public class jQuery implements Iterable<WebElement> {
         return "window.SeleniumjQuery_" + ref;
     }
 
-    private String selector;
-    private Long length;
-    private final String ref;
+    protected String selector;
+    protected Long length;
+    protected final String ref;
     protected final jQueryFactory jqf;
 
     private boolean closed = false;
@@ -106,16 +106,16 @@ public class jQuery implements Iterable<WebElement> {
      * Handles an explicit wait if an element prefoms an ajax request.
      */
     protected void wait4ajax() {
-//        while (true) {
-//            boolean ajaxIsComplete = ((Boolean) jqf.js("return jQuery.active == 0")).booleanValue();
-//            if (ajaxIsComplete)
-//                break;
-//            try {
-//                Thread.sleep(100);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
+        while (true) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            boolean ajaxIsComplete = ((Boolean) jqf.js("return jQuery.active == 0")).booleanValue();
+            if (ajaxIsComplete)
+                break;
+        }
     }
 
 

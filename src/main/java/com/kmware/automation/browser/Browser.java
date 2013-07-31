@@ -293,7 +293,7 @@ public class Browser {
             public void run() {
                 log.info("Closing driver");
                 try {
-                    drvr.quit();
+//                    drvr.quit();
                 } catch (Throwable t) {
                     log.error("Error during closing driver. Details below:", t);
                 }

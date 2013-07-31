@@ -288,17 +288,24 @@ public class Browser {
         if (StringUtils.isNotBlank(startupActions)) {
             executeActions(startupActions.split(";"));
         }
-        final WebDriver drvr = driver;
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            public void run() {
-                log.info("Closing driver");
-                try {
-                    drvr.quit();
-                } catch (Throwable t) {
-                    log.error("Error during closing driver. Details below:", t);
+
+        boolean manageShutdown = (options.property(Options.MANAGE_SHUTDOWN, Options.MANAGE_SHUTDOWN.defaults).equals("auto"));
+        if (manageShutdown) {
+            log.info("Shutdown will be managed in auto mode on jvm stop.");
+            final WebDriver drvr = driver;
+            Runtime.getRuntime().addShutdownHook(new Thread() {
+                public void run() {
+                    log.info("Closing driver");
+                    try {
+                        drvr.quit();
+                    } catch (Throwable t) {
+                        log.error("Error during closing driver. Details below:", t);
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            log.info("Shutdown will be managed in manual mode. You should close the driver as soon as it's no longer needed.");
+        }
     }
 
     protected DesiredCapabilities getDesiredCapabilities() {

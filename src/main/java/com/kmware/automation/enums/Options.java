@@ -12,7 +12,8 @@ public enum Options {
     SCREENSHOT_DIR("screenshot.dir","screenshots"),
     PACKAGES("actions.packages",""),
     STARTUP_ACTIONS("startup.actions",""),
-    START_MAXIMIZED("maximized.window","false");
+    START_MAXIMIZED("maximized.window","false"),
+    MANAGE_SHUTDOWN("manage.shutdown","auto");
 
     public final String value;
     public final String defaults;

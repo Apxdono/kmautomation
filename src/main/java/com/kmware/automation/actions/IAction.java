@@ -9,6 +9,6 @@ import com.kmware.automation.browser.Browser;
  */
 public interface IAction {
     public String getId();
-    public void init();
+    public void init(Browser browser);
     public void run(Browser browser,Object... args);
 }

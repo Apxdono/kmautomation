@@ -20,7 +20,7 @@ public class PrimefacesGoToMainAction implements IAction {
     }
 
     @Override
-    public void init() {
+    public void init(Browser browser) {
 
     }
 

@@ -196,6 +196,10 @@ public class Browser {
         return this;
     }
 
+    public IAction getAction(String id){
+        return this.actionIndexer.getAction(id);
+    }
+
     public Browser executeAction(String id, Object... args) {
         IAction action = actionIndexer.getAction(id);
         if (action != null) {
@@ -266,7 +270,7 @@ public class Browser {
     }
 
     protected void postInit() {
-        actionIndexer = new ActionIndexer();
+        actionIndexer = new ActionIndexer(this);
         String actionsPackages = options.property(Options.PACKAGES, Options.PACKAGES.defaults);
         if (StringUtils.isNotBlank(actionsPackages)) {
             actionIndexer.scanActions(actionsPackages.split(";"));

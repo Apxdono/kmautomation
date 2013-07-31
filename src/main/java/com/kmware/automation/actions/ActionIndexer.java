@@ -1,5 +1,6 @@
 package com.kmware.automation.actions;
 
+import com.kmware.automation.browser.Browser;
 import net.sf.extcos.ComponentQuery;
 import net.sf.extcos.ComponentScanner;
 import org.slf4j.Logger;
@@ -18,6 +19,11 @@ public class ActionIndexer {
 
     protected Map<String,ActionWrap> actions = new HashMap<String, ActionWrap>();
     protected Logger log = LoggerFactory.getLogger(getClass());
+    protected Browser browser;
+
+    public ActionIndexer(Browser b){
+        browser = b;
+    }
 
     public Map<String,ActionWrap> scanActions(final String[] packages){
         Set<Class<?>> classes = new HashSet<Class<?>>();
@@ -49,7 +55,7 @@ public class ActionIndexer {
     public IAction getAction(String id){
         ActionWrap pw = actions.get(id);
         if(pw == null) return null;
-        return pw.getAction();
+        return pw.getAction(this.browser);
     }
 
     public boolean register(Object target) {
@@ -96,7 +102,7 @@ public class ActionIndexer {
             instance = inst;
         }
 
-        public IAction getAction(){
+        public IAction getAction(Browser b){
             if(instance==null){
                 try {
                     Object buf = actionClass.newInstance();
@@ -109,7 +115,7 @@ public class ActionIndexer {
                     e.printStackTrace();
                 }
             }
-            instance.init();
+            instance.init(b);
             return instance;
         }
     }

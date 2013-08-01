@@ -66,10 +66,6 @@ public abstract class PFOneRadioAbstract<T extends PFOneRadioAbstract> extends E
 
 	@Override
 	public Element items(String criteria) {
-		 /*String id = this.attr("id");
-		 Element q= this.jqf.query(String.format(ITEMS_SELECTOR, id)).parent().parent().next().find("label"+criteria).parent().prev().find(".ui-radiobutton-box").find(String.format(ITEMS_SELECTOR, id),Element.class);
-		 Element e = this.jqf.query(String.format("label"+criteria,id),Element.class);
-		// e.jget().add(q);*/	
 		String id = this.attr("id");
 		return this.jqf.query(String.format(getItemSelector()+criteria,id),Element.class);
 	}

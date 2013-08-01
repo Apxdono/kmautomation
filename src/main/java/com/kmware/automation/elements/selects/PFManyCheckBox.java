@@ -12,7 +12,6 @@ import com.kmware.automation.jquery.jQueryFactory;
 public class PFManyCheckBox extends Element<PFManyCheckBox> implements IListBoxSelect<PFManyCheckBox> {
 	public static final String SELECTOR = ".ui-selectmanycheckbox";
 	public static final String ITEMS_SELECTOR = "table[id$=\"%s\"] .ui-chkbox .ui-chkbox-box";
-	private int selectedNumber;
 
 	public PFManyCheckBox(jQuery j) {
 		super(j);
@@ -41,7 +40,6 @@ public class PFManyCheckBox extends Element<PFManyCheckBox> implements IListBoxS
 
 	@Override
 	public PFManyCheckBox selectAt(int index) {
-		selectedNumber = index;
 		String id = this.attr("id");
 		this.jqf.query(String.format(ITEMS_SELECTOR, id)).jget(index).as(Element.class).click();
 		return this;
@@ -49,7 +47,8 @@ public class PFManyCheckBox extends Element<PFManyCheckBox> implements IListBoxS
 
 	@Override
 	public PFManyCheckBox selectValue(String value) {
-		items(":contains(" + value + ")").click();
+		String id = this.attr("id");
+		this.jqf.query(String.format(ITEMS_SELECTOR, id)).parent().find(".ui-helper-hidden-accessible input[value*=\""+value+"\"]").parent().next().click();
         return this;
 	}
 
@@ -67,28 +66,34 @@ public class PFManyCheckBox extends Element<PFManyCheckBox> implements IListBoxS
 
 	@Override
 	public Element itemsWith(String value) {
-		return items(":contains(" + value + ")");
+		return items("[value*=\"" + value + "\"]");
 	}
 
 	@Override
 	public Element items(String criteria) {
-		 String id = this.attr("id");
-		 return this.jqf.query(String.format(ITEMS_SELECTOR+criteria,id),Element.class);
+		String id = this.attr("id");
+		Element e= this.jqf.query(String.format(ITEMS_SELECTOR, id),Element.class);
+		e.parent().find(".ui-helper-hidden-accessible input"+criteria).parent().next().click();
+		return e;
+		//this.jqf.query(String.format(ITEMS_SELECTOR, id)).parent().find(".ui-helper-hidden-accessible input"+criteria).parent().next().as(PFManyCheckBox.class);
+		// return this.jqf.query(String.format(ITEMS_SELECTOR+criteria,id),Element.class);
 	}
 
 	@Override
 	public String selectedText() {
 	//	$('.ui-selectmanycheckbox:eq(0)').find('.ui-chkbox:eq(0)').find('.ui-helper-hidden-accessible').find('input').val();
+		//$('.ui-selectmanycheckbox').find('.ui-chkbox').find('.ui-chkbox-box').parent().find('.ui-helper-hidden-accessible input:checked').parent().parent().parent().next().find('label').text();
 		String id = this.attr("id");
-		String val = this.jqf.query(String.format(ITEMS_SELECTOR, id)).jget(selectedNumber).parent().parent().next().find("label").text();
+		String val = this.jqf.query(String.format(ITEMS_SELECTOR, id)).parent().find(".ui-helper-hidden-accessible input:checked").parent().parent().parent().next().find("label").text();
 		
 		return val;
 	}
 
 	@Override
 	public String selectedValue() {
+		//$('.ui-selectmanycheckbox').find('.ui-chkbox').find('.ui-chkbox-box').parent().find('.ui-helper-hidden-accessible input:checked')
 		String id = this.attr("id");
-		String val = this.jqf.query(String.format(ITEMS_SELECTOR, id)).jget(selectedNumber).parent().find(".ui-helper-hidden-accessible").find("input").val();
+		String val = this.jqf.query(String.format(ITEMS_SELECTOR, id)).parent().find(".ui-helper-hidden-accessible input:checked").val();
 		
 		return val;
 	}

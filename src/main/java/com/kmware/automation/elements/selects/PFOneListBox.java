@@ -59,8 +59,8 @@ public class PFOneListBox extends Element<PFOneListBox> implements IListBoxSelec
 
 	@Override
 	public Element items() {
-		// TODO Auto-generated method stub
-		return null;
+		items("");
+		return this;
 	}
 
 	@Override

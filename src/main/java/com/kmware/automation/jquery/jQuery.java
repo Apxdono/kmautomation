@@ -64,7 +64,7 @@ public class jQuery implements Iterable<WebElement> {
             this.selector = j.selector;
             init();
         } else {
-            this.selector = this.cssPath();
+            this.selector = j.cssPath();
             init();
         }
     }

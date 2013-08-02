@@ -3,10 +3,14 @@ package com.kmware.automation.elements.buttons;
 import org.openqa.selenium.WebElement;
 
 import com.kmware.automation.elements.base.Element;
+import com.kmware.automation.elements.base.JQElement;
 import com.kmware.automation.jquery.jQuery;
 import com.kmware.automation.jquery.jQueryFactory;
 
-public class PFCommandLink extends Element {
+@JQElement(
+        extraSelector = PFCommandLink.SELECTOR
+)
+public class PFCommandLink extends Element<PFCommandLink> {
     public static final String SELECTOR=".ui-commandlink:not(.ui-state-disabled)";
 
     public PFCommandLink(jQuery j) {

@@ -73,7 +73,7 @@ public class PFManyCheckBox extends Element<PFManyCheckBox> implements IListBoxS
 
 	@SuppressWarnings("rawtypes")
 	@Override
-	public Element items(final String criteria) {				
+	public Element items(String criteria) {				
 		Element e= this.find(ITEMS_SELECTOR+criteria).as(Element.class);
 		return e;
 	}

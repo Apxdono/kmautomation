@@ -1365,6 +1365,13 @@ public class jQuery implements Iterable<WebElement> {
     }
 
     public jQuery val(String val) {
+    	String length = this.attr("maxlength");
+    	if(StringUtils.isNotBlank(length)){
+    		int l = Integer.parseInt(length);
+    		if(l<val.length()){
+    			val = val.substring(0,l);
+    		}
+    	}
         jsref(".val(arguments[0]);", val);
         return this;
     }

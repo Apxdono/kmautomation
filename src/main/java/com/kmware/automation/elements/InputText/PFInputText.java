@@ -1,4 +1,4 @@
-package com.kmware.automation.elements.InputText;
+package com.kmware.automation.elements.inputtext;
 
 import org.openqa.selenium.WebElement;
 
@@ -11,7 +11,7 @@ import com.kmware.automation.jquery.jQueryFactory;
         extraSelector = PFInputText.SELECTOR
 )
 public class PFInputText extends Element<PFInputText>{
-	 public static final String SELECTOR=".ui-inputfield:visible:not(.ui-state-disabled)'";
+	 public static final String SELECTOR=".ui-inputfield:visible:not(.ui-state-disabled)";
 
 	public PFInputText(jQuery j) {
 		super(j);

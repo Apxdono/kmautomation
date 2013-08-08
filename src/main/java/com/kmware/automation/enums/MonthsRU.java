@@ -1,6 +1,6 @@
 package com.kmware.automation.enums;
 
-public enum Months {
+public enum MonthsRU {
 	Январь,
 	Февраль,
 	Март, 

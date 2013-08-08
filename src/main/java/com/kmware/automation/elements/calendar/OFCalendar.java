@@ -24,9 +24,6 @@ public class OFCalendar extends Element<OFCalendar> {
    
     public static final String DAY_SELECTOR="tbody[id$=\"%s::body\"] .o_calendar_day:not(.o_calendar_inactive_month_day)";
     
-//    .o_calendar_day:not(.o_calendar_inactive_month_day)
-//    div[id$="form:j_idt58--year
-
     public OFCalendar(jQuery j) {
         super(j);
     }

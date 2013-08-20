@@ -138,13 +138,15 @@ public class Browser {
         Element e = this.jq().query(selector, Element.class).getEl(index);
         String url = driver().getCurrentUrl();
         e.as(Element.class).nclick();
-        int hops = 0;
-        while (url.equals(driver().getCurrentUrl()) && hops < 6) {
+        if (currentImplementation.equals(Browsers.OPERA) || currentImplementation.equals(Browsers.SAFARI)) {
+            int hops = 0;
             log.debug("Waiting for page to load");
-            goToSleep(1000);
-            hops++;
+            while (url.equals(driver().getCurrentUrl()) && hops < 4) {
+                goToSleep(1000);
+                hops++;
+            }
+            documentReady();
         }
-        documentReady();
         return e;
     }
 
@@ -196,7 +198,7 @@ public class Browser {
         return this;
     }
 
-    public IAction getAction(String id){
+    public IAction getAction(String id) {
         return this.actionIndexer.getAction(id);
     }
 
